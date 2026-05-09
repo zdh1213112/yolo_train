@@ -1,0 +1,43 @@
+services:
+  api:
+    image: yolo-easy-api:latest
+    build:
+      context: .
+      args:
+        BASE_IMAGE: ${BASE_IMAGE:-python:3.11-slim}
+        APT_MIRROR: ${APT_MIRROR:-}
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-}
+        TORCH_VERSION: ${TORCH_VERSION:-2.10.0}
+        TORCHVISION_VERSION: ${TORCHVISION_VERSION:-0.25.0}
+        TORCH_INDEX_URL: ${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cu128}
+    container_name: yolo-easy-api
+    env_file:
+      - path: .env
+        required: false
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app
+    restart: unless-stopped
+    command: ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+  trainer:
+    image: yolo-easy-trainer:latest
+    build:
+      context: .
+      args:
+        BASE_IMAGE: ${BASE_IMAGE:-python:3.11-slim}
+        APT_MIRROR: ${APT_MIRROR:-}
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-}
+        TORCH_VERSION: ${TORCH_VERSION:-2.10.0}
+        TORCHVISION_VERSION: ${TORCHVISION_VERSION:-0.25.0}
+        TORCH_INDEX_URL: ${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cu128}
+    container_name: yolo-easy-trainer
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      - ./:/app
+    working_dir: /app
+    entrypoint: ["/bin/bash"]
+    tty: true
