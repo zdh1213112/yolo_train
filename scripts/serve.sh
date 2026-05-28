@@ -11,7 +11,9 @@ if [[ -f "${ENV_FILE}" ]]; then
 fi
 
 : "${API_HOST:=0.0.0.0}"
-: "${API_PORT:=8000}"
+if [[ -z "${API_PORT:-}" ]]; then
+  API_PORT="${PORT:-8000}"
+fi
 
 cd "${ROOT_DIR}"
 python -m uvicorn api.main:app --host "${API_HOST}" --port "${API_PORT}"

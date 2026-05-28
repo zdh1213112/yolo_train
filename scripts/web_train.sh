@@ -11,7 +11,9 @@ if [[ -f "${ENV_FILE}" ]]; then
 fi
 
 : "${WEBUI_HOST:=0.0.0.0}"
-: "${WEBUI_PORT:=7860}"
+if [[ -z "${WEBUI_PORT:-}" ]]; then
+  WEBUI_PORT="${PORT:-7860}"
+fi
 
 cd "${ROOT_DIR}"
 python web/train_ui.py --host "${WEBUI_HOST}" --port "${WEBUI_PORT}"

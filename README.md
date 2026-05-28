@@ -224,6 +224,8 @@ bash ./scripts/use_local_model.sh /path/to/yolo26n-obb.pt
 http://127.0.0.1:7860
 ```
 
+如果运行平台会注入 `PORT`（有些 PaaS 或在线 Docker 平台会这样做，例如要求 `7890`），`./scripts/web_train.sh` 会优先监听 `PORT`，否则再回退到 `WEBUI_PORT` 或默认 `7860`。
+
 页面支持：
 
 - 上传标准 YOLO 数据集 zip
@@ -315,6 +317,8 @@ outputs/train/<run-name>/weights/best.pt
 ```text
 http://127.0.0.1:8000
 ```
+
+如果运行平台会注入 `PORT`，`./scripts/serve.sh` 会优先监听 `PORT`，否则再回退到 `API_PORT` 或默认 `8000`。
 
 健康检查：
 

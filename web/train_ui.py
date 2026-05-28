@@ -345,7 +345,8 @@ def build_ui() -> gr.Blocks:
 def main() -> None:
     parser = argparse.ArgumentParser(description="YOLO Easy Deploy Web trainer")
     parser.add_argument("--host", default=os.getenv("WEBUI_HOST", "0.0.0.0"))
-    parser.add_argument("--port", type=int, default=int(os.getenv("WEBUI_PORT", "7860")))
+    default_port = int(os.getenv("WEBUI_PORT") or os.getenv("PORT", "7860"))
+    parser.add_argument("--port", type=int, default=default_port)
     args = parser.parse_args()
 
     app = build_ui()

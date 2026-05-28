@@ -35,6 +35,6 @@ RUN if [ -n "${PIP_INDEX_URL}" ]; then \
 
 COPY . /app
 
-EXPOSE 8000
+EXPOSE 8000 7860 7890
 
-CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["bash", "./scripts/serve.sh"]
