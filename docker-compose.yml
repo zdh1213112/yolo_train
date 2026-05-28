@@ -1,0 +1,50 @@
+services:
+  api:
+    image: yolo-easy-api:latest
+    build:
+      context: .
+      args:
+        BASE_IMAGE: ${BASE_IMAGE:-python:3.11-slim}
+        APT_MIRROR: ${APT_MIRROR:-}
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-}
+        TORCH_VERSION: ${TORCH_VERSION:-2.10.0}
+        TORCHVISION_VERSION: ${TORCHVISION_VERSION:-0.25.0}
+        TORCH_INDEX_URL: ${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cu128}
+    container_name: yolo-easy-api
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      API_PORT: ${API_PORT:-8000}
+      YOLO_CONFIG_DIR: /app/.cache/ultralytics
+    ports:
+      - "${API_PORT:-8000}:${API_PORT:-8000}"
+    volumes:
+      - ./:/app
+      - ./.cache/ultralytics:/app/.cache/ultralytics
+    restart: unless-stopped
+    command: ["bash", "./scripts/serve.sh"]
+
+  trainer:
+    image: yolo-easy-trainer:latest
+    build:
+      context: .
+      args:
+        BASE_IMAGE: ${BASE_IMAGE:-python:3.11-slim}
+        APT_MIRROR: ${APT_MIRROR:-}
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-}
+        TORCH_VERSION: ${TORCH_VERSION:-2.10.0}
+        TORCHVISION_VERSION: ${TORCHVISION_VERSION:-0.25.0}
+        TORCH_INDEX_URL: ${TORCH_INDEX_URL:-https://download.pytorch.org/whl/cu128}
+    container_name: yolo-easy-trainer
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      - ./:/app
+      - ./.cache/ultralytics:/app/.cache/ultralytics
+    environment:
+      YOLO_CONFIG_DIR: /app/.cache/ultralytics
+    working_dir: /app
+    entrypoint: ["/bin/bash"]
+    tty: true

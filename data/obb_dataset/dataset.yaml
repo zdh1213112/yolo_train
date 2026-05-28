@@ -1,0 +1,7 @@
+path: /home/zdh/yolo_one/yolo_easy_deploy/data/obb_dataset
+train: images/train
+val: images/val
+
+nc: 1
+names:
+  0: object
